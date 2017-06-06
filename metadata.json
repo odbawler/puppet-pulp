@@ -27,14 +27,6 @@
     {
       "name": "puppetlabs/concat",
       "version_requirement": ">= 1.0.0 < 3.0.0"
-    },
-    {
-      "name": "katello/qpid",
-      "version_requirement": ">= 2.0.0 < 3.0.0"
-    },
-    {
-      "name": "thias/squid3",
-      "version_requirement": "1.0.2"
     }
   ],
   "requirements": [

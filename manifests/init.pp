@@ -254,9 +254,6 @@
 #
 class pulp (
   String $version = $::pulp::params::version,
-  Boolean $crane_debug = $::pulp::params::crane_debug,
-  Integer[1, 65535] $crane_port = $::pulp::params::crane_port,
-  Stdlib::Absolutepath $crane_data_dir = $::pulp::params::crane_data_dir,
   String $db_name = $::pulp::params::db_name,
   String $db_seeds = $::pulp::params::db_seeds,
   Optional[String] $db_username = $::pulp::params::db_username,
@@ -309,7 +306,6 @@ class pulp (
   Integer[1, 65535] $email_port = $::pulp::params::email_port,
   String $email_from = $::pulp::params::email_from,
   Boolean $email_enabled = $::pulp::params::email_enabled,
-  Boolean $manage_squid = $::pulp::params::manage_squid,
   Optional[String] $lazy_redirect_host = $::pulp::params::lazy_redirect_host,
   Optional[Integer[1, 65535]] $lazy_redirect_port = $::pulp::params::lazy_redirect_port,
   Optional[String] $lazy_redirect_path = $::pulp::params::lazy_redirect_path,
@@ -327,8 +323,6 @@ class pulp (
   Optional[String] $proxy_password = $::pulp::params::proxy_password,
   Optional[String] $yum_max_speed = $::pulp::params::yum_max_speed,
   Integer[0] $num_workers = $::pulp::params::num_workers,
-  Boolean $enable_katello = $::pulp::params::enable_katello,
-  Boolean $enable_crane = $::pulp::params::enable_crane,
   Optional[Integer[0]] $max_tasks_per_child = $::pulp::params::max_tasks_per_child,
   Boolean $enable_docker = $::pulp::params::enable_docker,
   Boolean $enable_rpm = $::pulp::params::enable_rpm,
@@ -373,17 +367,6 @@ class pulp (
 
   include ::mongodb::client
   include ::pulp::broker
-
-  if $enable_crane {
-    class { '::pulp::crane':
-      cert     => $https_cert,
-      key      => $https_key,
-      ca_cert  => $ca_cert,
-      port     => $crane_port,
-      data_dir => $crane_data_dir,
-      debug    => $crane_debug,
-    }
-  }
 
   contain ::pulp::install
   contain ::pulp::config

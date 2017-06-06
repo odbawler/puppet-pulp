@@ -39,7 +39,7 @@ class pulp::consumer::params {
   $messaging_scheme = 'tcp'
   $messaging_host = $host
   $messaging_port = 5672
-  $messaging_transport = 'qpid'
+  $messaging_transport = 'rabbitmq'
   $messaging_cacert = undef
   $messaging_clientcert = undef
   $messaging_version = 'present'

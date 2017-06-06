@@ -3,23 +3,10 @@
 class pulp::install {
   package { ['pulp-server', 'pulp-selinux', 'python-pulp-streamer']: ensure => $pulp::version, }
 
-  if $pulp::messaging_transport == 'qpid' {
-    ensure_packages(['python-gofer-qpid'], {
-        ensure => $pulp::messaging_version,
-      }
-    )
-  }
-
-  if $pulp::messaging_transport == 'rabbitmq' {
-    ensure_packages(['python-gofer-amqp'], {
-        ensure => $pulp::messaging_version,
-      }
-    )
-  }
-
-  if $pulp::enable_katello {
-    package { ['pulp-katello']: ensure => $pulp::version, }
-  }
+  ensure_packages(['python-gofer-amqp'], {
+      ensure => $pulp::messaging_version,
+    }
+  )
 
   if $pulp::enable_parent_node {
     package { ['pulp-nodes-parent']: ensure => $pulp::version, }

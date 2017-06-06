@@ -32,12 +32,12 @@ class pulp::params {
   $serial_number_path = '/var/lib/pulp/sn.dat'
 
   $consumer_history_lifetime = 180
-  $oauth_enabled = false
+  $oauth_enabled = true
   $oauth_key = 'pulp'
   $oauth_secret = 'secret'
 
-  $messaging_url = "tcp://${::fqdn}:5672"
-  $messaging_transport = 'qpid'
+  $messaging_url = "tcp://mquser:password@server1:5672"
+  $messaging_transport = 'rabbitmq'
   $messaging_auth_enabled = true
   $messaging_ca_cert = undef
   $messaging_client_cert = undef
@@ -46,7 +46,7 @@ class pulp::params {
   $messaging_event_notification_url = undef
   $messaging_version = 'present'
 
-  $broker_url = "qpid:///guest@${::fqdn}:5672"
+  $broker_url = "amqp://mquser:password@localhost/"
   $broker_use_ssl = false
   $tasks_login_method = undef
 
@@ -60,12 +60,6 @@ class pulp::params {
   $ssl_verify_client = 'require'
   $ssl_protocol = ['all', '-SSLv2', '-SSLv3']
 
-  $crane_debug = false
-  $crane_port = 5000
-  $crane_data_dir = '/var/lib/pulp/published/docker/v2/app'
-
-  $enable_katello = false
-  $enable_crane = false
   $enable_rpm = true
   $enable_docker = false
   $enable_ostree = false
@@ -78,7 +72,6 @@ class pulp::params {
   $email_from = "no-reply@${::domain}"
   $email_enabled = false
 
-  $manage_squid = false
   $lazy_redirect_host = downcase($::fqdn)
   $lazy_redirect_port = undef
   $lazy_redirect_path = '/streamer/'
@@ -108,7 +101,6 @@ class pulp::params {
 
   $max_keep_alive = 10000
   $num_workers = min($::processorcount, 8)
-  $max_tasks_per_child = undef
 
   $yum_max_speed = undef
 
