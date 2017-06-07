@@ -9,4 +9,6 @@ class pulp::repo::upstream(
     gpgcheck => true,
     gpgkey   => "https://repos.fedorapeople.org/repos/pulp/pulp/GPG-RPM-KEY-pulp-${version}",
   }
+
+
 }

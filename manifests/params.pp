@@ -66,6 +66,7 @@ class pulp::params {
   $enable_puppet = false
   $enable_python = false
   $enable_parent_node = false
+  $enable_epel = true
 
   $email_host = 'localhost'
   $email_port = 25

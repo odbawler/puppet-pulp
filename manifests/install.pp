@@ -1,6 +1,7 @@
 # Pulp Installation Packages
 # Private class
 class pulp::install {
+
   package { ['pulp-server', 'pulp-selinux', 'python-pulp-streamer']: ensure => $pulp::version, }
 
   ensure_packages(['python-gofer-amqp'], {
