@@ -370,7 +370,6 @@ class pulp (
   include ::mongodb::client
   include ::pulp::broker
 
-  contain ::pulp::repo::upstream
   contain ::pulp::install
   contain ::pulp::config
   contain ::pulp::database
@@ -378,5 +377,5 @@ class pulp (
   contain ::pulp::apache
 
 
-  Class['pulp::repo::upstream'] -> Class['pulp::install'] -> Class['pulp::config'] -> Class['pulp::database'] ~> Class['pulp::service', 'pulp::apache']
+  Class['pulp::consumer'] -> Class['pulp::install'] -> Class['pulp::config'] -> Class['pulp::database'] ~> Class['pulp::service', 'pulp::apache']
 }

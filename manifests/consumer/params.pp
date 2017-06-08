@@ -5,7 +5,7 @@ class pulp::consumer::params {
   $enable_nodes = false
   $enable_rpm = true
 
-  $host = $::fqdn
+  $host = $pulp::server_name
   $port = 443
   $api_prefix = '/pulp/api'
   $verify_ssl = false

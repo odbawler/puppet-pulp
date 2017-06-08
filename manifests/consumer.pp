@@ -130,6 +130,8 @@ class pulp::consumer (
   $package_profile_enabled = $::pulp::consumer::params::package_profile_enabled,
   $package_profile_verbose = $::pulp::consumer::params::package_profile_verbose,
 ) inherits pulp::consumer::params {
+
+  class { '::pulp::repo::upstream': } ->
   class { '::pulp::consumer::install': } ->
   class { '::pulp::consumer::config': } ~>
   class { '::pulp::consumer::service': }

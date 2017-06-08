@@ -1,7 +1,7 @@
 # Pulp Admin Params
 class pulp::admin::params {
   $version            = 'installed'
-  $host               = $::fqdn
+  $host               = $pulp::server_name
   $port               = 443
   $api_prefix         = '/pulp/api'
   $verify_ssl         = false
