@@ -11,7 +11,7 @@ class pulp::params {
   $db_ssl = false
   $db_ssl_keyfile = undef
   $db_ssl_certfile = undef
-  $db_verify_ssl = true
+  $db_verify_ssl = false
   $db_ca_path = '/etc/pki/tls/certs/ca-bundle.crt'
   $db_unsafe_autoretry = false
   $db_write_concern = undef

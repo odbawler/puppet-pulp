@@ -4,7 +4,7 @@ class pulp::admin::params {
   $host               = $::fqdn
   $port               = 443
   $api_prefix         = '/pulp/api'
-  $verify_ssl         = true
+  $verify_ssl         = false
   $ca_path            = '/etc/pki/tls/certs/ca-bundle.crt'
   $upload_chunk_size  = 1048576
   $role               = 'admin'

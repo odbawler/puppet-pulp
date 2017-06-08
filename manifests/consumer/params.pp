@@ -8,7 +8,7 @@ class pulp::consumer::params {
   $host = $::fqdn
   $port = 443
   $api_prefix = '/pulp/api'
-  $verify_ssl = true
+  $verify_ssl = false
   $ca_path = '/etc/pki/tls/certs/ca-bundle.crt'
   $rsa_server_pub = '/etc/pki/pulp/consumer/server/rsa_pub.key'
 
