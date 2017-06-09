@@ -36,7 +36,7 @@ class pulp::params {
   $oauth_key = 'pulp'
   $oauth_secret = 'secret'
 
-  $messaging_url = "tcp://mquser:password@server1:5672"
+  $messaging_url = "tcp://mquser:password@" + downcase($::fqdn) + ":5672"
   $messaging_transport = 'rabbitmq'
   $messaging_auth_enabled = true
   $messaging_ca_cert = undef
@@ -46,7 +46,7 @@ class pulp::params {
   $messaging_event_notification_url = undef
   $messaging_version = 'present'
 
-  $broker_url = "amqp://mquser:password@localhost/"
+  $broker_url = "amqp://mquser:password@" + downcase($::fqdn) +"/"
   $broker_use_ssl = false
   $tasks_login_method = undef
 
@@ -57,8 +57,8 @@ class pulp::params {
   $https_chain = undef
   $ssl_username = 'SSL_CLIENT_S_DN_CN'
   $enable_http = false
-  $ssl_verify_client = 'require'
-  $ssl_protocol = ['all', '-SSLv2', '-SSLv3']
+  #$ssl_verify_client = 'require'
+  #$ssl_protocol = ['all', '-SSLv2', '-SSLv3']
 
   $enable_rpm = true
   $enable_docker = false
@@ -109,7 +109,7 @@ class pulp::params {
   $show_conf_diff = false
 
   $node_certificate = '/etc/pki/pulp/nodes/node.crt'
-  $node_verify_ssl = true
+  $node_verify_ssl = false
   $node_server_ca_cert = '/etc/pki/pulp/ca.crt'
   $node_oauth_effective_user = 'admin'
   $node_oauth_key = 'pulp'
