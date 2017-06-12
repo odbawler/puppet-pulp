@@ -36,7 +36,7 @@ class pulp::params {
   $oauth_key = 'pulp'
   $oauth_secret = 'secret'
 
-  $messaging_url = "tcp://mquser:password@" + downcase($::fqdn) + ":5672"
+  $messaging_url = "tcp://mquser:password@$::fqdn:5672"
   $messaging_transport = 'rabbitmq'
   $messaging_auth_enabled = true
   $messaging_ca_cert = undef
@@ -46,7 +46,7 @@ class pulp::params {
   $messaging_event_notification_url = undef
   $messaging_version = 'present'
 
-  $broker_url = "amqp://mquser:password@" + downcase($::fqdn) +"/"
+  $broker_url = "amqp://mquser:password@$::fqdn/"
   $broker_use_ssl = false
   $tasks_login_method = undef
 
@@ -55,7 +55,6 @@ class pulp::params {
   $https_cert = $ca_cert
   $https_key = $ca_key
   $https_chain = undef
-  $ssl_username = 'SSL_CLIENT_S_DN_CN'
   $enable_http = false
   #$ssl_verify_client = 'require'
   #$ssl_protocol = ['all', '-SSLv2', '-SSLv3']

@@ -12,7 +12,6 @@ WSGIImportScript /usr/share/pulp/wsgi/content.wsgi process-group=pulp-content ap
     SSLRenegBufferSize  1048576
     SSLVerifyDepth 9
     SSLOptions +StdEnvVars +ExportCertData
-    SSLVerifyClient <%= scope['pulp::ssl_verify_client'] %>
 </Files>
 
 <Location /pulp/content/>

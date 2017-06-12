@@ -37,7 +37,7 @@ class pulp::consumer::params {
   $wrap_width = 80
 
   $messaging_scheme = 'tcp'
-  $messaging_host = "mquser:password@" + $host
+  $messaging_host = "mquser:password@$host"
   $messaging_port = 5672
   $messaging_transport = 'rabbitmq'
   $messaging_cacert = undef

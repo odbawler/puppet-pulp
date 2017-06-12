@@ -32,7 +32,7 @@
 # ssl_certfile:      The certificate file used to identify the local connection against mongod.
 # verify_ssl:        Specifies whether a certificate is required from the other side of the
 #                    connection, and whether it will be validated if provided. If it is true, then
-#                    the ca_cert parameter must point to a file of CA certificates used to
+#                    the ssl_ca_certs parameter must point to a file of CA certificates used to
 #                    validate the connection.
 # ca_path:           The ca_certs file contains a set of concatenated “certification authority”
 #                    certificates, which are used to validate certificates passed from the other end
@@ -42,34 +42,23 @@
 # write_concern:     Write concern of 'majority' or 'all'. When 'all' is specified, 'w' is set to
 #                    number of seeds specified. For version of MongoDB < 2.6, replica_set must also
 #                    be specified. Please note that 'all' will cause Pulp to halt if any of the
-#                    replica set members is not available. 'majority' is used by defau
+#                    replica set members is not available. 'majority' is used by default.
+
 
 [database]
-name: <%= scope['pulp::db_name'] %>
-seeds: <%= scope['pulp::db_seeds'] %>
-<%# Auth is currently only working on mongo >= 2.6 -%>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::db_username')) -%>
-username: <%= scope['pulp::db_username'] %>
-<% end -%>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::db_password')) -%>
-password: <%= scope['pulp::db_password'] %>
-<% end -%>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::db_replica_set')) -%>
-replica_set: <%= scope['pulp::db_replica_set'] %>
-<% end -%>
-ssl: <%= scope['pulp::db_ssl'] %>
-<% if scope['pulp::db_ssl'] -%>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::db_ssl_keyfile')) -%>
-ssl_keyfile: <%= scope['pulp::db_ssl_keyfile'] %>
-<% end -%>
-ssl_certfile: <%= scope['pulp::db_ssl_certfile'] %>
-verify_ssl: <%= scope['pulp::db_verify_ssl'] %>
-ca_path: <%= scope['pulp::db_ca_path'] %>
-<% end -%>
-unsafe_autoretry: <%= scope['pulp::db_unsafe_autoretry'] %>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::db_write_concern'))-%>
-write_concern: <%= scope['pulp::db_write_concern'] %>
-<% end -%>
+# name: pulp_database
+# seeds: localhost:27017
+# username:
+# password:
+# replica_set:
+# ssl: false
+# ssl_keyfile:
+# ssl_certfile:
+verify_ssl: false
+# ca_path: /etc/pki/tls/certs/ca-bundle.crt
+# unsafe_autoretry: false
+# write_concern: majority
+
 
 # = Server =
 #
@@ -85,18 +74,19 @@ write_concern: <%= scope['pulp::db_write_concern'] %>
 # debugging_mode:   boolean; toggles Pulp's debugging capabilities
 # log_level:        The desired logging level. Options are: CRITICAL, ERROR, WARNING, INFO, DEBUG,
 #                   and NOTSET. Pulp will default to INFO.
+# log_type:         how logs should be logged on the system. Options are: syslog, console
 # working_directory:path to where pulp workers can create working directories needed to complete tasks
 [server]
-server_name: <%= scope['pulp::server_name'] %>
-key_url: <%= scope['pulp::key_url'] %>
-ks_url: <%= scope['pulp::ks_url'] %>
-default_login: <%= scope['pulp::default_login'] %>
-default_password: <%= scope['pulp::default_password'] %>
-debugging_mode: <%= scope['pulp::debugging_mode'] %>
-log_level: <%= scope['pulp::log_level'] %>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::server_working_directory')) -%>
-working_directory: <%= scope['pulp::server_working_directory'] %>
-<% end -%>
+server_name: server1
+# key_url: /pulp/gpg
+# ks_url: /pulp/ks
+# default_login: admin
+# default_password: admin
+# debugging_mode: false
+# log_level: INFO
+# log_type: syslog
+# working_directory: /var/cache/pulp
+
 
 # = Authentication =
 #
@@ -108,8 +98,8 @@ working_directory: <%= scope['pulp::server_working_directory'] %>
 #   The RSA public key used for authentication.
 
 [authentication]
-rsa_key = <%= scope['pulp::rsa_key'] %>
-rsa_pub = <%= scope['pulp::rsa_pub'] %>
+# rsa_key = /etc/pki/pulp/rsa.key
+# rsa_pub = /etc/pki/pulp/rsa_pub.key
 
 
 # = Security =
@@ -143,12 +133,11 @@ rsa_pub = <%= scope['pulp::rsa_pub'] %>
 #
 
 [security]
-cacert: <%= scope['pulp::ca_cert'] %>
-cakey: <%= scope['pulp::ca_key'] %>
-ssl_ca_certificate: <%= scope['pulp::ca_cert'] %>
-user_cert_expiration: <%= scope['pulp::user_cert_expiration'] %>
-consumer_cert_expiration: <%= scope['pulp::consumer_cert_expiration'] %>
-serial_number_path: <%= scope['pulp::serial_number_path'] %>
+# cacert: /etc/pki/pulp/ca.crt  # Deprecated! See above description for details.
+# cakey: /etc/pki/pulp/ca.key  # Deprecated! See above description for details.
+# ssl_ca_certificate: /etc/pki/pulp/ssl_ca.crt  # Deprecated! See above description for details.
+# user_cert_expiration: 7
+# consumer_cert_expiration: 3650
 
 
 # -- Advanced Configuration ---------------------------------------------------
@@ -161,7 +150,7 @@ serial_number_path: <%= scope['pulp::serial_number_path'] %>
 #     than this will be purged; set to -1 to disable
 
 [consumer_history]
-lifetime: <%= scope['pulp::consumer_history_lifetime'] %>
+# lifetime: 180
 
 
 # = Data Reaping =
@@ -186,9 +175,8 @@ lifetime: <%= scope['pulp::consumer_history_lifetime'] %>
 # task_status_history: float; time in days to store task status history in the db
 # task_result_history: float; time in days to store task results history
 
-# [data_reaping]
+[data_reaping]
 # reaper_interval: 0.25
-# archived_calls: 0.5
 # consumer_history: 60
 # repo_sync_history: 60
 # repo_publish_history: 60
@@ -242,9 +230,9 @@ lifetime: <%= scope['pulp::consumer_history_lifetime'] %>
 #     authentication
 
 [oauth]
-# enabled: <%= scope['pulp::oauth_enabled'] %>
-# oauth_key: <%= scope['pulp::oauth_key'] %>
-# oauth_secret: <%= scope['pulp::oauth_secret'] %>
+# enabled: true
+# oauth_key:
+# oauth_secret:
 
 
 # = Messaging =
@@ -289,20 +277,15 @@ lifetime: <%= scope['pulp::consumer_history_lifetime'] %>
 #     The AMQP URL for event notifications. Defaults to 'qpid://localhost:5672/'.
 
 [messaging]
-url: <%= scope['pulp::messaging_url'] %>
-transport: <%= scope['pulp::messaging_transport'] %>
-auth_enabled: <%= scope['pulp::messaging_auth_enabled'] %>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::messaging_ca_cert')) -%>
-cacert: <%= scope['pulp::messaging_ca_cert'] %>
-<% end -%>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::messaging_client_cert')) -%>
-clientcert: <%= scope['pulp::messaging_client_cert'] %>
-<% end -%>
-topic_exchange: '<%= scope['pulp::messaging_topic_exchange'] %>'
-event_notifications_enabled: <%= scope['pulp::messaging_event_notifications_enabled'] %>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::messaging_event_notification_url')) -%>
-event_notification_url: <%= scope['pulp::messaging_event_notification_url'] %>
-<% end -%>
+url: tcp://mquser:password@server1:5672
+transport: rabbitmq
+# auth_enabled: true
+# cacert: /etc/pki/qpid/ca/ca.crt
+# clientcert: /etc/pki/qpid/client/client.pem
+# topic_exchange: 'amq.topic'
+# event_notifications_enabled: false
+# event_notification_url: qpid://localhost:5672/
+
 
 # = Asynchronous Tasks =
 #
@@ -337,18 +320,13 @@ event_notification_url: <%= scope['pulp::messaging_event_notification_url'] %>
 #     unset except in special cases such as SSL client certificate authentication.
 
 [tasks]
-broker_url: <%= scope['pulp::broker_url'] %>
-celery_require_ssl: <%= scope['pulp::broker_use_ssl'] %>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::messaging_ca_cert')) -%>
-cacert: <%= scope['pulp::messaging_ca_cert'] %>
-<% end -%>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::messaging_client_cert'))  -%>
-keyfile: <%= scope['pulp::messaging_client_cert'] %>
-certfile: <%= scope['pulp::messaging_client_cert'] %>
-<% end -%>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::tasks_login_method')) -%>
-login_method: <%= scope['pulp::tasks_login_method'] %>
-<% end -%>
+broker_url: amqp://mquser:password@server1:5672
+# celery_require_ssl: false
+# cacert: /etc/pki/pulp/qpid/ca.crt
+# keyfile: /etc/pki/pulp/qpid/client.crt
+# certfile: /etc/pki/pulp/qpid/client.crt
+# login_method:
+
 
 # = Email =
 #
@@ -369,26 +347,28 @@ login_method: <%= scope['pulp::tasks_login_method'] %>
 # enabled: boolean controls whether or not emails will be sent
 
 [email]
-host: <%= scope['pulp::email_host'] %>
-port: <%= scope['pulp::email_port'] %>
-from: <%= scope['pulp::email_from'] %>
-enabled: <%= scope['pulp::email_enabled'] %>
+# host: localhost
+# port: 25
+# from: no-reply@your.domain
+# enabled: false
+
 
 # = Lazy =
 #
 # Settings for lazy content loading.
 #
-# enabled:
-#   This controls whether redirect is enabled
-#
 # redirect_host:
-#   The host FQDN or IP to which requests are redirected.
+#   The host FQDN or IP to which requests are redirected. Defaults to
+#   the local host's fully qualified domain name.
 #
 # redirect_port:
-#   The TCP port to which requests are redirected
+#   The TCP port to which requests are redirected. By default no port
+#   is stated explicitly so an HTTP redirect will use port 80 and an
+#   HTTPS redirect will use port 443. The protocol used will match the
+#   protocol the client used for the initial request.
 #
 # redirect_path:
-#   The base path to which requests are redirected
+#   The base path to which requests are redirected. Defaults to /streamer/
 #
 # https_retrieval:
 #   boolean; controls whether Pulp uses HTTPS or HTTP to
@@ -409,32 +389,27 @@ enabled: <%= scope['pulp::email_enabled'] %>
 #   downloading content from the Squid cache.
 
 [lazy]
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::lazy_redirect_host')) -%>
-redirect_host: <%= scope['pulp::lazy_redirect_host'] %>
-<% end -%>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::lazy_redirect_port')) -%>
-redirect_port: <%= scope['pulp::lazy_redirect_port'] %>
-<% end -%>
-<% unless [nil, :undefined, :undef, ''].include?(scope.lookupvar('pulp::lazy_redirect_path')) -%>
-redirect_path: <%= scope['pulp::lazy_redirect_path'] %>
-<% end -%>
-https_retrieval: <%= scope['pulp::lazy_https_retrieval'] %>
-download_interval: <%= scope['pulp::lazy_download_interval'] %>
-download_concurrency: <%= scope['pulp::lazy_download_concurrency'] %>
+# redirect_host:
+# redirect_port:
+# redirect_path:
+# https_retrieval: true
+# download_interval: 30
+# download_concurrency: 5
 
 # = Profiling =
 #
 # Settings for profiling Pulp tasks
 #
-# enable:
+# enabled:
 #   This enables the cProfile Python module to profile individual tasks and
 #   store the output by task ID in a directory. Note that enabling this can
 #   impact performance.
 #
-# profile_directory:
-#   The directory that the cProfiles are stored in. This directory must be
-#   writeable and readable by Pulp.
+# directory:
+#   The directory that the cProfiles are written to. This directory must be
+#   writeable and readable by Pulp. This directory will be created automatically
+#   if it does not exist.
 
 [profiling]
-enable: <%= scope['pulp::enable_profiling'] %>
-directory: <%= scope['pulp::profiling_directory'] %>
+# enabled: false
+# directory: /var/lib/pulp/c_profiles

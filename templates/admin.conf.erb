@@ -1,7 +1,10 @@
+# The settings in this file are all commented by default, and the commented settings show the
+# default values that Pulp Admin will choose if not specified here.
+
 # The pulp server configuration
 #
 # host:
-#   The pulp server hostname
+#   The pulp server hostname. If not specified, this value will default to socket.gethostname().
 # port:
 #   The port providing the RESTful API
 # rsa_pub:
@@ -20,12 +23,12 @@
 #   CA certificates (with openssl-style hashed symlinks, one certificate per file).
 
 [server]
-host: <%= scope['pulp::admin::host'] %>
-port: <%= scope['pulp::admin::port'] %>
-api_prefix: <%= scope['pulp::admin::api_prefix'] %>
-verify_ssl: <%= scope['pulp::admin::verify_ssl'] %>
-ca_path: <%= scope['pulp::admin::ca_path'] %>
-upload_chunk_size: <%= scope['pulp::admin::upload_chunk_size'] %>
+host: server1
+# port: 443
+# api_prefix: /pulp/api
+verify_ssl: False
+# ca_path: /etc/pki/tls/certs/ca-bundle.crt
+# upload_chunk_size: 1048576
 
 
 # Client settings.
@@ -33,7 +36,7 @@ upload_chunk_size: <%= scope['pulp::admin::upload_chunk_size'] %>
 # role: The client role.
 
 [client]
-role: <%= scope['pulp::admin::role'] %>
+# role: admin
 
 
 # The location of resources on the file system.
@@ -49,22 +52,10 @@ role: <%= scope['pulp::admin::role'] %>
 #   Directory where status files for in progress uploads will be stored
 
 [filesystem]
-extensions_dir: <%= scope['pulp::admin::extensions_dir'] %>
-id_cert_dir: <%= scope['pulp::admin::id_cert_dir'] %>
-id_cert_filename: <%= scope['pulp::admin::id_cert_filename'] %>
-upload_working_dir: <%= scope['pulp::admin::upload_working_dir'] %>
-
-
-# Client logging.
-#
-# filename:
-#   The location of the admin client log file.
-# call_log_filename:
-#   If present, the raw REST responses will be logged to the given file.
-
-[logging]
-filename: <%= scope['pulp::admin::log_filename'] %>
-call_log_filename: <%= scope['pulp::admin::call_log_filename'] %>
+# extensions_dir: /usr/lib/pulp/admin/extensions
+# id_cert_dir: ~/.pulp
+# id_cert_filename: user-cert.pem
+# upload_working_dir: ~/.pulp/uploads
 
 
 # Admin client output.
@@ -81,7 +72,7 @@ call_log_filename: <%= scope['pulp::admin::call_log_filename'] %>
 #   The number of characters written before wrapping to the next line.
 
 [output]
-poll_frequency_in_seconds: <%= scope['pulp::admin::poll_frequency_in_seconds'] %>
-enable_color: <%= scope['pulp::admin::enable_color'] %>
-wrap_to_terminal: <%= scope['pulp::admin::wrap_to_terminal'] %>
-wrap_width: <%= scope['pulp::admin::wrap_width'] %>
+# poll_frequency_in_seconds: 1
+# enable_color: true
+# wrap_to_terminal: false
+# wrap_width: 80
